@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { useState } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import { useState, Fragment } from 'react';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import styled from 'styled-components';
 import { getAllTravelLogs } from '@utils/db-admin';
 import { LocationMarker } from '@components/location-marker';
@@ -22,7 +22,19 @@ const MainContainer = styled.main`
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
 `;
 
+const PopupText = styled.p`
+  color: var(--color-popup-text);
+  padding: 0;
+  margin: 0;
+`;
+
+const Button = styled.button`
+  background: none;
+  border: none;
+`;
+
 export default function Index({ logs }) {
+  const [showPopup, setShowPopup] = useState({});
   const [viewport, setViewport] = useState({
     width: '100%',
     height: '100%',
@@ -50,13 +62,32 @@ export default function Index({ logs }) {
           onViewportChange={nextViewport => setViewport(nextViewport)}
         >
           {logs.map(log => (
-            <Marker
-              key={log.id}
-              latitude={parseFloat(log.latitude)}
-              longitude={parseFloat(log.longitude)}
-            >
-              <LocationMarker />
-            </Marker>
+            <Fragment key={log.id}>
+              <Marker latitude={parseFloat(log.latitude)} longitude={parseFloat(log.longitude)}>
+                <Button
+                  onClick={() =>
+                    setShowPopup({
+                      [log.id]: true,
+                    })
+                  }
+                >
+                  <LocationMarker />
+                </Button>
+              </Marker>
+              {!showPopup[log.id] ? null : (
+                <Popup
+                  latitude={parseFloat(log.latitude)}
+                  longitude={parseFloat(log.longitude)}
+                  closeButton={true}
+                  closeOnClick={false}
+                  onClose={() => setShowPopup(false)}
+                  dynamicPosition={true}
+                  anchor="bottom"
+                >
+                  <PopupText>{log.location}</PopupText>
+                </Popup>
+              )}
+            </Fragment>
           ))}
         </ReactMapGL>
       </MainContainer>
