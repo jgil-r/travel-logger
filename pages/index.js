@@ -1,7 +1,24 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import ReactMapGL from 'react-map-gl';
-import styles from '@styles/index.module.css';
+import styled from 'styled-components';
+
+const AppContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MainContainer = styled.main`
+  width: 900px;
+  max-width: 90vw;
+  height: 75vh;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+`;
 
 export default function Index() {
   const [viewport, setViewport] = useState({
@@ -13,7 +30,7 @@ export default function Index() {
   });
 
   return (
-    <div className={styles.app__container}>
+    <AppContainer>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -23,14 +40,14 @@ export default function Index() {
         />
       </Head>
 
-      <main className={styles.main__container}>
+      <MainContainer>
         <ReactMapGL
           mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}
           mapStyle="mapbox://styles/jgil-r/ckcb9aqs35x7w1ip6t8ljo3t2"
           {...viewport}
           onViewportChange={nextViewport => setViewport(nextViewport)}
         />
-      </main>
-    </div>
+      </MainContainer>
+    </AppContainer>
   );
 }
