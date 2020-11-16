@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import { useState } from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 import styled from 'styled-components';
 import { getAllTravelLogs } from '@utils/db-admin';
+import { LocationMarker } from '@components/location-marker';
 
 const AppContainer = styled.div`
   width: 100vw;
@@ -30,7 +31,6 @@ export default function Index({ logs }) {
     zoom: 3,
   });
 
-  console.log(logs);
   return (
     <AppContainer>
       <Head>
@@ -48,7 +48,17 @@ export default function Index({ logs }) {
           mapStyle="mapbox://styles/jgil-r/ckcb9aqs35x7w1ip6t8ljo3t2"
           {...viewport}
           onViewportChange={nextViewport => setViewport(nextViewport)}
-        />
+        >
+          {logs.map(log => (
+            <Marker
+              key={log.id}
+              latitude={parseFloat(log.latitude)}
+              longitude={parseFloat(log.longitude)}
+            >
+              <LocationMarker />
+            </Marker>
+          ))}
+        </ReactMapGL>
       </MainContainer>
     </AppContainer>
   );

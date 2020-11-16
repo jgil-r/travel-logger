@@ -1,6 +1,8 @@
 :root {
   --color-bg: #343434;
   --color-fg: #ffffff;
+
+  --color-location-marker: #ffcb1f;
 }
 
 * {
