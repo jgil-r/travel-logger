@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 import firebase from './firebase';
+import { createUser } from './db';
 
 const authContext = createContext();
 
@@ -14,24 +15,21 @@ export function useAuth() {
 
 function useAuthProvider() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const handleUser = rawUser => {
     if (rawUser) {
       const user = formatUser(rawUser);
 
-      setLoading(false);
+      createUser(user.uid, user);
       setUser(user);
       return user;
     } else {
-      setLoading(false);
       setUser(user);
       return false;
     }
   };
 
   const signInWithGithub = () => {
-    setLoading(true);
     return firebase
       .auth()
       .signInWithPopup(new firebase.auth.GithubAuthProvider())
@@ -53,7 +51,6 @@ function useAuthProvider() {
 
   return {
     user,
-    loading,
     signInWithGithub,
     signOut,
   };
