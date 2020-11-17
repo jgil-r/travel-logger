@@ -95,7 +95,7 @@ export default function Index({ logs }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const { logs } = await getAllTravelLogs();
 
   return {
