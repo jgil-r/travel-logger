@@ -1,9 +1,9 @@
-import Head from 'next/head';
 import { useState, Fragment } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 import styled from 'styled-components';
 import { getAllTravelLogs } from '@utils/db-admin';
 import { LocationMarker } from '@components/location-marker';
+import SEO from '@components/seo';
 
 const AppContainer = styled.div`
   width: 100vw;
@@ -44,54 +44,48 @@ export default function Index({ logs }) {
   });
 
   return (
-    <AppContainer>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
-          rel="stylesheet"
-        />
-      </Head>
-
-      <MainContainer>
-        <ReactMapGL
-          mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}
-          mapStyle="mapbox://styles/jgil-r/ckcb9aqs35x7w1ip6t8ljo3t2"
-          {...viewport}
-          onViewportChange={nextViewport => setViewport(nextViewport)}
-        >
-          {logs.map(log => (
-            <Fragment key={log.id}>
-              <Marker latitude={parseFloat(log.latitude)} longitude={parseFloat(log.longitude)}>
-                <Button
-                  onClick={() =>
-                    setShowPopup({
-                      [log.id]: true,
-                    })
-                  }
-                >
-                  <LocationMarker />
-                </Button>
-              </Marker>
-              {!showPopup[log.id] ? null : (
-                <Popup
-                  latitude={parseFloat(log.latitude)}
-                  longitude={parseFloat(log.longitude)}
-                  closeButton={true}
-                  closeOnClick={false}
-                  onClose={() => setShowPopup(false)}
-                  dynamicPosition={true}
-                  anchor="bottom"
-                >
-                  <PopupText>{log.location}</PopupText>
-                </Popup>
-              )}
-            </Fragment>
-          ))}
-        </ReactMapGL>
-      </MainContainer>
-    </AppContainer>
+    <>
+      <SEO />
+      <AppContainer>
+        <MainContainer>
+          <ReactMapGL
+            mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}
+            mapStyle="mapbox://styles/jgil-r/ckcb9aqs35x7w1ip6t8ljo3t2"
+            {...viewport}
+            onViewportChange={nextViewport => setViewport(nextViewport)}
+          >
+            {logs.map(log => (
+              <Fragment key={log.id}>
+                <Marker latitude={parseFloat(log.latitude)} longitude={parseFloat(log.longitude)}>
+                  <Button
+                    onClick={() =>
+                      setShowPopup({
+                        [log.id]: true,
+                      })
+                    }
+                  >
+                    <LocationMarker />
+                  </Button>
+                </Marker>
+                {!showPopup[log.id] ? null : (
+                  <Popup
+                    latitude={parseFloat(log.latitude)}
+                    longitude={parseFloat(log.longitude)}
+                    closeButton={true}
+                    closeOnClick={false}
+                    onClose={() => setShowPopup(false)}
+                    dynamicPosition={true}
+                    anchor="bottom"
+                  >
+                    <PopupText>{log.location}</PopupText>
+                  </Popup>
+                )}
+              </Fragment>
+            ))}
+          </ReactMapGL>
+        </MainContainer>
+      </AppContainer>
+    </>
   );
 }
 
