@@ -1,5 +1,5 @@
 # Travel Logger
 
-Website to log places travelled to. Built using NextJS, Mapbox, and Firebase.
+Website to log places traveled to. Built using NextJS, Mapbox, Firebase, and Styled-Components.
 
 [Live Website](https://travel-logger.vercel.app/)
