@@ -42,7 +42,6 @@ export default function AddLog() {
 
     createTravelLog(newLog);
     router.push('/');
-    router.reload();
   };
 
   return (
