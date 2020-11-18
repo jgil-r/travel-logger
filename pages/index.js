@@ -31,6 +31,7 @@ const PopupText = styled.p`
 const Button = styled.button`
   background: none;
   border: none;
+  cursor: pointer;
 `;
 
 export default function Index({ logs }) {
@@ -56,7 +57,12 @@ export default function Index({ logs }) {
           >
             {logs.map(log => (
               <Fragment key={log.id}>
-                <Marker latitude={parseFloat(log.latitude)} longitude={parseFloat(log.longitude)}>
+                <Marker
+                  latitude={parseFloat(log.latitude)}
+                  longitude={parseFloat(log.longitude)}
+                  offsetTop={-5}
+                  offsetLeft={-5}
+                >
                   <Button
                     onClick={() =>
                       setShowPopup({
@@ -75,6 +81,7 @@ export default function Index({ logs }) {
                     closeOnClick={false}
                     onClose={() => setShowPopup(false)}
                     dynamicPosition={true}
+                    sortByDepth={true}
                     anchor="bottom"
                   >
                     <PopupText>{log.location}</PopupText>
@@ -89,12 +96,13 @@ export default function Index({ logs }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const { logs } = await getAllTravelLogs();
 
   return {
     props: {
       logs,
     },
+    revalidate: 1,
   };
 }
