@@ -32,6 +32,7 @@ const Button = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  outline: none;
 `;
 
 export default function Index({ logs }) {
@@ -96,13 +97,12 @@ export default function Index({ logs }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const { logs } = await getAllTravelLogs();
 
   return {
     props: {
       logs,
     },
-    revalidate: 1,
   };
 }
