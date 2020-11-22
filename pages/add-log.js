@@ -1,25 +1,9 @@
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
-import { useForm } from 'react-hook-form';
+
 import { useAuth } from '@utils/auth';
-import { createTravelLog } from '@utils/db';
-import SEO from '@components/seo';
 
-const AddLogContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Form = styled.form`
-  > p {
-    display: flex;
-    flex-direction: column;
-  }
-`;
+import { SEO, PrimaryButton, AddLogForm, AppContainer } from '@components/index';
 
 const SignOutContainer = styled.div`
   position: fixed;
@@ -27,57 +11,41 @@ const SignOutContainer = styled.div`
   right: 1rem;
 `;
 
+const FormContainer = styled.div`
+  width: 400px;
+  max-width: 90vw;
+`;
+
 export default function AddLog() {
-  const router = useRouter();
-  const { register, handleSubmit } = useForm();
   const auth = useAuth();
+  const [hasMounted, setHasMounted] = useState(false);
 
-  const onSubmit = data => {
-    const newLog = {
-      id: uuidv4(),
-      location: data.location,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    };
-
-    createTravelLog(newLog);
-    router.push('/');
-  };
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   return (
     <>
       <SEO title="Add Log" />
-      <AddLogContainer>
+      <AppContainer>
         <main>
           {auth.user ? (
-            <div>
+            <FormContainer>
               <h1>Hello, {auth.user.name}</h1>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <p>
-                  <label htmlFor="location">Location:</label>
-                  <input id="location" name="location" type="text" ref={register} required />
-                </p>
-                <p>
-                  <label htmlFor="latitude">Latitude:</label>
-                  <input id="latitude" name="latitude" type="text" ref={register} required />
-                </p>
-                <p>
-                  <label htmlFor="longitude">Longitude:</label>
-                  <input id="longitude" name="longitude" type="text" ref={register} required />
-                </p>
-                <div>
-                  <button>Submit</button>
-                </div>
-              </Form>
+              <AddLogForm />
               <SignOutContainer>
-                <button onClick={() => auth.signOut()}>Sign Out</button>
+                <PrimaryButton onClick={() => auth.signOut()}>Sign Out</PrimaryButton>
               </SignOutContainer>
-            </div>
+            </FormContainer>
           ) : (
-            <button onClick={() => auth.signInWithGithub()}>Sign In</button>
+            <>
+              {hasMounted ? (
+                <PrimaryButton onClick={() => auth.signInWithGithub()}>Sign In</PrimaryButton>
+              ) : null}
+            </>
           )}
         </main>
-      </AddLogContainer>
+      </AppContainer>
     </>
   );
 }

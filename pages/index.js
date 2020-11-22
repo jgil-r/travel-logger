@@ -1,39 +1,26 @@
 import { useState, Fragment } from 'react';
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import styled from 'styled-components';
+
 import { getAllTravelLogs } from '@utils/db-admin';
-import { LocationMarker } from '@components/location-marker';
-import SEO from '@components/seo';
 
-const AppContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import {
+  AppContainer,
+  MainContainer,
+  PopupLocation,
+  SEO,
+  LocationMarker,
+  Button,
+} from '@components/index';
 
-const MainContainer = styled.main`
-  width: 900px;
-  max-width: 90vw;
-  height: 75vh;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
-`;
+export async function getServerSideProps() {
+  const { logs } = await getAllTravelLogs();
 
-const PopupText = styled.p`
-  color: var(--color-popup-text);
-  padding: 0;
-  margin: 0;
-`;
-
-const Button = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: none;
-`;
+  return {
+    props: {
+      logs,
+    },
+  };
+}
 
 export default function Index({ logs }) {
   const [showPopup, setShowPopup] = useState({});
@@ -70,6 +57,7 @@ export default function Index({ logs }) {
                         [log.id]: true,
                       })
                     }
+                    text="View Location"
                   >
                     <LocationMarker />
                   </Button>
@@ -85,7 +73,7 @@ export default function Index({ logs }) {
                     sortByDepth={true}
                     anchor="bottom"
                   >
-                    <PopupText>{log.location}</PopupText>
+                    <PopupLocation>{log.location}</PopupLocation>
                   </Popup>
                 )}
               </Fragment>
@@ -95,14 +83,4 @@ export default function Index({ logs }) {
       </AppContainer>
     </>
   );
-}
-
-export async function getServerSideProps() {
-  const { logs } = await getAllTravelLogs();
-
-  return {
-    props: {
-      logs,
-    },
-  };
 }
