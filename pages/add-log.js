@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAuth } from '@utils/auth';
@@ -18,11 +17,6 @@ const FormContainer = styled.div`
 
 export default function AddLog() {
   const auth = useAuth();
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
 
   return (
     <>
@@ -38,11 +32,7 @@ export default function AddLog() {
               </SignOutContainer>
             </FormContainer>
           ) : (
-            <>
-              {hasMounted ? (
-                <PrimaryButton onClick={() => auth.signInWithGithub()}>Sign In</PrimaryButton>
-              ) : null}
-            </>
+            <PrimaryButton onClick={() => auth.signInWithGithub()}>Sign In</PrimaryButton>
           )}
         </main>
       </AppContainer>
